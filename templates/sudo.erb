@@ -1,0 +1,3 @@
+# Allow <%= @user %> to run nrpe check command
+Defaults:<%= @user %> !requiretty
+<%= @user %> ALL=NOPASSWD:<%= @nagios_plugin_dir %>/<%= @check_command %> <%= @command_args %>

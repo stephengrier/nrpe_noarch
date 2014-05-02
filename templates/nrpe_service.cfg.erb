@@ -1,0 +1,1 @@
+command[<%= @name %>]=<% if @sudo == true %>/usr/bin/sudo <% end %><%= @nagios_plugin_dir %>/<%= @check_command %> <%= @command_args %>

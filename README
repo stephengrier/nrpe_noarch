@@ -1,0 +1,34 @@
+nrpe_noarch
+============
+
+Stephen Grier <git@grier.org.uk>
+
+Class: nrpe_noarch
+
+This class installs and managed nrpe. It managed the main nrpe.cfg file
+and creates files for each nrpe check command in /etc/nrpe.d. It can
+additionally add sudo config snippets in /etc/sudoers.d for check commands
+that require root privileges.
+
+The nrpe_noarch module will configure nrpe on RedHat, Debian and AIX hosts.
+
+Parameters:
+
+Actions:
+ - Install nrpe
+ - Manage nrpe check command configuration
+ - Manage required sudo config
+ - Add iptables rule as required.
+
+Requires:
+ - The nrpe_noarch::firewall class uses the iptables module.
+
+Sample Usage:
+
+   class { 'nrpe_noarch': allowed_hosts => '127.0.0.1,192.168.0.10', firewall => true }
+   nrpe_noarch::command { 'check_zombie_procs':
+     check_command => 'check_procs',
+     command_args => '-w 5 -c 10 -s Z',
+     sudo => true
+   }
+

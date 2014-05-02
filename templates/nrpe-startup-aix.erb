@@ -1,0 +1,57 @@
+#!/usr/bin/ksh
+#
+# description: NRPE startup script
+#
+
+NRPE_BIN=/opt/freeware/bin/nrpe
+
+PIDFILE=/var/run/nrpe.pid
+
+# Check for missing binaries (stale symlinks should not happen)
+test -x $NRPE_BIN || { echo "$NRPE_BIN not installed";
+        if [ "$1" = "stop" ]; then exit 0;
+        else exit 5; fi; }
+
+# Check for existence of needed config file and read it
+NRPE_CONFIG=/opt/freeware/etc/nrpe.cfg
+test -r $NRPE_CONFIG || { echo "$NRPE_CONFIG doesn't exist";
+        if [ "$1" = "stop" ]; then exit 0;
+        else exit 6; fi; }
+
+case "$1" in
+    start)
+        if [ -r $PIDFILE ]; then
+            echo "NRPE is already running with PID "`cat $PIDFILE`"."
+            exit 1
+        fi
+        echo "Starting NRPE..."
+
+        ## Start daemon (writes PID to file $PIDFILE).
+        $NRPE_BIN -d -c /opt/freeware/etc/nrpe.cfg
+        ;;
+    stop)
+        echo "Shutting down NRPE... "
+        ## Stop daemon.
+        if [ -r $PIDFILE ]; then
+            kill `cat $PIDFILE`
+            rm -f $PIDFILE
+        fi
+        ;;
+    status)
+        if [ -r $PIDFILE ]; then
+            echo "NRPE is running with PID "`cat $PIDFILE`"."
+        else
+            echo "NRPE is not running."
+        fi
+        ;;
+    restart)
+        ## Stop the service and regardless of whether it was
+        ## running or not, start it again.
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
