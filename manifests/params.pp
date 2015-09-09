@@ -63,8 +63,7 @@ class nrpe_noarch::params {
     RedHat: {
       $plugin_package_list = ['nagios-plugins-all',
                               'nagios-plugins-nrpe',
-                              'nagios-plugins-radius',
-                              'nagios-plugins-linux_raid']
+                              'nagios-plugins-radius']
     }
     Debian: {
       $plugin_package_list = ['libnagios-plugin-perl','nagios-plugins-extra','nagios-plugins-basic','nagios-plugins-standard', 'nagios-plugins']
